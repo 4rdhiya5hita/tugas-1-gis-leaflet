@@ -3,57 +3,59 @@
 @section('title', __('outlet.create'))
 
 @section('content')
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">{{ __('outlet.create') }}</div>
-            <form method="POST" action="{{ route('outlets.store') }}" accept-charset="UTF-8">
-                {{ csrf_field() }}
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="name" class="control-label">{{ __('outlet.name') }}</label>
-                        <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required>
-                        {!! $errors->first('name', '<span class="invalid-feedback" role="alert">:message</span>') !!}
-                    </div>
-                    <div class="form-group">
-                        <label for="address" class="control-label">{{ __('outlet.address') }}</label>
-                        <textarea id="address" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}" name="address" rows="4">{{ old('address') }}</textarea>
-                        {!! $errors->first('address', '<span class="invalid-feedback" role="alert">:message</span>') !!}
-                    </div>
-                    <div class="form-group">
-                        <label for="type" class="control-label">{{ __('outlet.type') }}</label>
-                        <select id="type" type="text" class="form-control{{ $errors->has('type') ? ' is-invalid' : '' }}" name="type" value="{{ old('type') }}" required>
-                            <option>house</option>
-                            <option>store</option>
-                            <option>school</option>
-                        </select>
-                        {!! $errors->first('type', '<span class="invalid-feedback" role="alert">:message</span>') !!}
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="latitude" class="control-label">{{ __('outlet.latitude') }}</label>
-                                <input id="latitude" type="text" class="form-control{{ $errors->has('latitude') ? ' is-invalid' : '' }}" name="latitude" value="{{ old('latitude', request('latitude')) }}" required>
-                                {!! $errors->first('latitude', '<span class="invalid-feedback" role="alert">:message</span>') !!}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="longitude" class="control-label">{{ __('outlet.longitude') }}</label>
-                                <input id="longitude" type="text" class="form-control{{ $errors->has('longitude') ? ' is-invalid' : '' }}" name="longitude" value="{{ old('longitude', request('longitude')) }}" required>
-                                {!! $errors->first('longitude', '<span class="invalid-feedback" role="alert">:message</span>') !!}
-                            </div>
+<!-- <p style="background-image: url('/img/background.png'); width:1200px; height:680px"> -->
+  <div style="background-image: url('/img/bg-peta.jpg'); background-size: cover; height:605px; padding-top:80px;">
+  
+<div class="container">
+    <div class="card justify-content-center">
+        <div class="card-header bg-primary font-weight-bold" style="color: white; font-size:large;">{{ __('outlet.create') }}</div>
+        <form method="POST" action="{{ route('outlets.store') }}" accept-charset="UTF-8">
+            {{ csrf_field() }}
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="name" class="control-label">{{ __('outlet.name') }}</label>
+                    <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required>
+                    {!! $errors->first('name', '<span class="invalid-feedback" role="alert">:message</span>') !!}
+                </div>
+                <div class="form-group">
+                    <label for="address" class="control-label">{{ __('outlet.address') }}</label>
+                    <input id="address" type="text" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}" name="address" value="{{ old('address') }}" required>
+                    {!! $errors->first('address', '<span class="invalid-feedback" role="alert">:message</span>') !!}
+                </div>
+                <div class="form-group">
+                    <label for="type" class="control-label">{{ __('outlet.type') }}</label>
+                    <select id="type" type="text" class="form-control{{ $errors->has('type') ? ' is-invalid' : '' }}" name="type" value="{{ old('type') }}" required>
+                        <option>house</option>
+                        <option>store</option>
+                        <option>school</option>
+                    </select>
+                    {!! $errors->first('type', '<span class="invalid-feedback" role="alert">:message</span>') !!}
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="latitude" class="control-label">{{ __('outlet.latitude') }}</label>
+                            <input id="latitude" type="text" class="form-control{{ $errors->has('latitude') ? ' is-invalid' : '' }}" name="latitude" value="{{ old('latitude', request('latitude')) }}" required>
+                            {!! $errors->first('latitude', '<span class="invalid-feedback" role="alert">:message</span>') !!}
                         </div>
                     </div>
-                    <!-- <div id="mapid"></div> -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="longitude" class="control-label">{{ __('outlet.longitude') }}</label>
+                            <input id="longitude" type="text" class="form-control{{ $errors->has('longitude') ? ' is-invalid' : '' }}" name="longitude" value="{{ old('longitude', request('longitude')) }}" required>
+                            {!! $errors->first('longitude', '<span class="invalid-feedback" role="alert">:message</span>') !!}
+                        </div>
+                    </div>
                 </div>
-                <div class="card-footer">
-                    <input type="submit" value="{{ __('outlet.create') }}" class="btn btn-success">
-                    <a href="{{ route('outlets.index') }}" class="btn btn-link">{{ __('app.cancel') }}</a>
-                </div>
-            </form>
-        </div>
+                <!-- <div id="mapid"></div> -->
+            </div>
+            <div class="card-footer">
+                <button type="submit" value="{{ __('outlet.create') }}" class="btn btn-primary">Simpan Data</button>
+                <!-- <a href="{{ route('outlets.index') }}" class="btn btn-link">{{ __('app.cancel') }}</a> -->
+            </div>
+        </form>
     </div>
+</div>
 </div>
 @endsection
 
