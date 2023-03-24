@@ -46,9 +46,9 @@
 
     axios.get('{{ route('api.outlets.index') }}')
     .then(function (response) {
-        console.log(response.data);
+        // console.log(response.data);
         var point_type = response.data;
-        console.log(point_type);
+        // console.log(point_type);
 
         point_type.getFeaturesByProperty = function(key, value) {
             return this.features.filter(function(feature){
