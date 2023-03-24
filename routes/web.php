@@ -23,6 +23,8 @@
 // Route::get('/our_outlets', 'OutletMapController@index')->name('outlet_map.index');
 // Route::resource('outlets', 'OutletController');
 
+
+//dipakai
 Route::get('/', 'OutletMapController@index')->name('outlet_map.index');
 
 // Route::get('/our_outlets', 'OutletMapController@index');
