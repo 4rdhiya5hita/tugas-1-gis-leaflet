@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- <p style="background-image: url('/img/background.png'); width:1200px; height:680px"> -->
-  <div style="background-image: url('/img/bg-peta.jpg'); background-size: cover; height:605px; padding-top:80px;">
+  <div style="background-image: url('/img/bg-peta.jpg'); background-size: cover; height:625px; padding-top:80px;">
   
 <div class="container">
     <div class="card justify-content-center">
