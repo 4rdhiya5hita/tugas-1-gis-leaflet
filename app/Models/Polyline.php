@@ -9,6 +9,6 @@ class Polyline extends Model
 {
     use HasFactory;
     
-    protected $table = "tb_polyline";
-    protected $fillable = ['latitude', 'longitude'];
+    protected $table = "tb_titik";
+    protected $fillable = ['nama', 'lokasi', 'tipe', 'latitude', 'longitude'];
 }
