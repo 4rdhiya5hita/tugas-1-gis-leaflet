@@ -138,6 +138,30 @@
         theMarker.bindPopup(popupContent)
         .openPopup();
     });
+    
+    axios.get('{{ route('api.outlets.index') }}')
+    .then(function (response) {
+        // console.log(response.data);
+        var point_type = response.data;
+        // console.log(point_type);
+        
+        })
+    .catch(function (error) {
+        console.log(error);
+    });
+    
+    var coordinates = [];
+    for (var i = 0; i < databaseValues.length; i++) {
+      var latlng = L.latLng(databaseValues[i].latitude, databaseValues[i].longitude);
+      coordinates.push(latlng);
+    }
+
+    var polyline = L.polyline(coordinates, {
+      color: 'red',
+      weight: 3,
+      opacity: 0.5
+    }).addTo(map);
+
     // ada yg hilang disini (authorization)
 </script>
 @endpush
