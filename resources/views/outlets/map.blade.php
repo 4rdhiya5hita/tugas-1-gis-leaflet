@@ -145,6 +145,15 @@
         var point_type = response.data;
         console.log(point_type);
         
+            // Get the geometry object from the feature.
+            var geometry = feature.geometry;
+
+            // Get the coordinates from the geometry object.
+            var coordinates = geometry.getCoordinates();
+
+            // The 'coordinates' variable now contains the coordinates of the feature's geometry.
+            console.log(coordinates);
+        
         var coordinates = [];
         for (var i = 0; i < point_type.length; i++) {
           var latlng = L.latLng(point_type[i].latitude, point_type[i].longitude);
