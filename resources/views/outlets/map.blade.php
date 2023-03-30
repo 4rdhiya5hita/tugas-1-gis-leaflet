@@ -144,13 +144,10 @@
         //console.log(response.data);
         var point_type = response.data;
         console.log(point_type);
-        
-            // Get the geometry object from the feature.
-            var geometry = point_type.geometry;
-            console.log(geometry);
 
             // Get the coordinates from the geometry object.
-            var coordinates = geometry.getCoordinates();
+            var coordinates = point_type.getCoordinates();
+            console.log(coordinates);
 
             // The 'coordinates' variable now contains the coordinates of the feature's geometry.
             console.log(coordinates);
