@@ -141,26 +141,26 @@
     
     axios.get('{{ route('api.outlets.index') }}')
     .then(function (response) {
-        // console.log(response.data);
+        //console.log(response.data);
         var point_type = response.data;
-        // console.log(point_type);
+        console.log(point_type);
+        
+        var coordinates = [];
+        for (var i = 0; i < point_type.length; i++) {
+          var latlng = L.latLng(point_type[i].latitude, point_type[i].longitude);
+          coordinates.push(latlng);
+        }
+
+        var polyline = L.polyline(coordinates, {
+          color: 'red',
+          weight: 3,
+          opacity: 0.5
+        }).addTo(map);
         
         })
     .catch(function (error) {
         console.log(error);
     });
-    
-    var coordinates = [];
-    for (var i = 0; i < databaseValues.length; i++) {
-      var latlng = L.latLng(databaseValues[i].latitude, databaseValues[i].longitude);
-      coordinates.push(latlng);
-    }
-
-    var polyline = L.polyline(coordinates, {
-      color: 'red',
-      weight: 3,
-      opacity: 0.5
-    }).addTo(map);
 
     // ada yg hilang disini (authorization)
 </script>
