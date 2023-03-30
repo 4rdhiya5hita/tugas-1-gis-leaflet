@@ -144,30 +144,19 @@
         //console.log(response.data);
         var point_type = response.data;
         console.log(point_type);
-
-            // Get the coordinates from the geometry object.
-            var coordinates = point_type.getCoordinates();
-            console.log(coordinates);
-
-            // The 'coordinates' variable now contains the coordinates of the feature's geometry.
-            console.log(coordinates);
-        
-        var coordinates = [];
-        for (var i = 0; i < point_type.length; i++) {
-          var latlng = L.latLng(point_type[i].latitude, point_type[i].longitude);
-          coordinates.push(latlng);
-        }
-
-        var polyline = L.polyline(coordinates, {
-          color: 'red',
-          weight: 3,
-          opacity: 0.5
-        }).addTo(map);
-        
+       
         })
     .catch(function (error) {
         console.log(error);
     });
+    
+    var coordinates = [];
+    @foreach($data as $row)
+        var latlng = L.latLng({{ $row->latitude }}, {{ $row->longitude }});
+        coordinates.push(latlng);
+    @endforeach
+
+    var polyline = L.polyline(coordinates, { color: 'red' }).addTo(map);       
 
     // ada yg hilang disini (authorization)
 </script>
