@@ -147,6 +147,7 @@
         
             // Get the geometry object from the feature.
             var geometry = point_type.geometry;
+            console.log(geometry);
 
             // Get the coordinates from the geometry object.
             var coordinates = geometry.getCoordinates();
