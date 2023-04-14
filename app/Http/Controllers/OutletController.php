@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Outlet;
+use App\School;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OutletController extends Controller
 {
@@ -14,7 +16,7 @@ class OutletController extends Controller
      */
     public function index()
     {
-        $this->authorize('manage_outlet');
+        // $this->authorize('manage_outlet');
 
         $outletQuery = Outlet::query();
         $outletQuery->where('name', 'like', '%'.request('q').'%');
@@ -44,6 +46,22 @@ class OutletController extends Controller
     public function store(Request $request)
     {
         // $this->authorize('create', new Outlet);
+        $school = null;
+
+        if ($request->type == 'school'){
+            $newSchool = $request->validate([
+                'akreditas'    => 'required|max:20',
+                'jumlah_siswa' => 'required|max:20',
+                'jenjang'      => 'required|max:20',
+            ]);
+
+            School::create($newSchool);
+            $school = DB::table('schools')->latest('id')->first();
+        }
+
+        if ($school) {
+            $school_id = $school->id; // Access the 'id' column value from the retrieved record
+        }
 
         $newOutlet = $request->validate([
             'name'      => 'required|max:60',
@@ -51,10 +69,21 @@ class OutletController extends Controller
             'latitude'  => 'nullable|required_with:longitude|max:15',
             'longitude' => 'nullable|required_with:latitude|max:15',
             'type'      => 'nullable|max:60',
-        ]);
-        // $newOutlet['creator_id'] = auth()->id();
+        ]);        
 
-        $outlet = Outlet::create($newOutlet);
+        $outlet = DB::table('outlets')->insert([
+            'school_id' => $school_id,
+            'name'      => $newOutlet['name'],
+            'address'   => $newOutlet['address'],
+            'latitude'  => $newOutlet['latitude'],
+            'longitude' => $newOutlet['longitude'],
+            'type'      => $newOutlet['type'],
+            // Add more fields and their values as needed
+        ]);
+
+        
+        // $newOutlet['creator_id'] = auth()->id();
+        // $outlet = Outlet::create($newOutlet);
 
         return redirect()->route('outlet_map.index', $outlet);
         // return redirect()->route('outlets.show', $outlet);
@@ -68,7 +97,10 @@ class OutletController extends Controller
      */
     public function show(Outlet $outlet)
     {
-        return view('outlets.show', compact('outlet'));
+        // $school = $outlet->creator;
+        $schools = School::find($outlet->school_id);
+        // dd($schools);
+        return view('outlets.show', compact('outlet', 'schools'));
     }
 
     /**
@@ -79,9 +111,11 @@ class OutletController extends Controller
      */
     public function edit(Outlet $outlet)
     {
-        $this->authorize('update', $outlet);
+        // $this->authorize('update', $outlet);
+        $type = ['house' => 'House', 'school' => 'School', 'store' => 'Store'];
 
-        return view('outlets.edit', compact('outlet'));
+        $school = School::find($outlet->school_id);
+        return view('outlets.edit', compact('outlet', 'school' ,'type'));
     }
 
     /**
@@ -93,16 +127,46 @@ class OutletController extends Controller
      */
     public function update(Request $request, Outlet $outlet)
     {
-        $this->authorize('update', $outlet);
+        // $this->authorize('update', $outlet);
+        // dd($outlet->creator->id);
+        if ($request->type == 'school'){
+            $updateSchool = $request->validate([
+                'akreditas'    => 'required|max:20',
+                'jumlah_siswa' => 'required|max:20',
+                'jenjang'      => 'required|max:20',
+            ]);
+            School::find($outlet->school_id)->update($updateSchool);
+
+            // $data = School::find($outlet->creator->id);
+            // dd($data);
+            // // Update the fields with the new data
+            // $data->akreditas = $request->input('akreditas');
+            // $data->jumlah_siswa = $request->input('jumlah_siswa');
+            // $data->jenjang = $request->input('jenjang');
+            // $data->save();
+            // $school = DB::table('schools')->latest('id')->first();
+        }
+        else{
+            // $school_id = null;
+            $school_id = $outlet->school_id;
+            $outlet->update([
+                'school_id' => null,
+            ]);
+            School::find($school_id)->delete();
+
+        }
 
         $outletData = $request->validate([
             'name'      => 'required|max:60',
+            'type'      => 'nullable|max:60',
             'address'   => 'nullable|max:255',
             'latitude'  => 'nullable|required_with:longitude|max:15',
             'longitude' => 'nullable|required_with:latitude|max:15',
             'type'      => 'nullable|max:60',
         ]);
         $outlet->update($outletData);
+
+
 
         return redirect()->route('outlets.show', $outlet);
     }
@@ -116,12 +180,14 @@ class OutletController extends Controller
      */
     public function destroy(Request $request, Outlet $outlet)
     {
-        $this->authorize('delete', $outlet);
+        // $this->authorize('delete', $outlet);
 
         $request->validate(['outlet_id' => 'required']);
+        $school_id = $outlet->school_id;
 
         if ($request->get('outlet_id') == $outlet->id && $outlet->delete()) {
-            return redirect()->route('outlets.index');
+            School::find($school_id)->delete();
+            return redirect()->route('outlet_map.index');
         }
 
         return back();

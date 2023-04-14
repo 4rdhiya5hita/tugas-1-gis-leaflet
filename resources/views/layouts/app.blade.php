@@ -15,6 +15,7 @@
 
     <!-- Styles -->
     <link href="{{ secure_asset('css/app.css') }}" rel="stylesheet">
+    <!-- secure_secure_asset() for HEROKU -->
     @yield('styles')
 </head>
 <body>

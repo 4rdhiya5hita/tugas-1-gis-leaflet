@@ -15,7 +15,7 @@ class ManageOutletTest extends TestCase
     {
         $outlet = factory(Outlet::class)->create();
 
-        $this->loginAsUser();
+        // $this->loginAsUser();
         $this->visitRoute('outlets.index');
         $this->see($outlet->name);
     }
@@ -34,7 +34,7 @@ class ManageOutletTest extends TestCase
     /** @test */
     public function user_can_create_a_outlet()
     {
-        $this->loginAsUser();
+        // $this->loginAsUser();
         $this->visitRoute('outlets.index');
 
         $this->click(__('outlet.create'));
@@ -50,7 +50,7 @@ class ManageOutletTest extends TestCase
     /** @test */
     public function validate_outlet_name_is_required()
     {
-        $this->loginAsUser();
+        // $this->loginAsUser();
 
         // name empty
         $this->post(route('outlets.store'), $this->getCreateFields(['name' => '']));
@@ -60,7 +60,7 @@ class ManageOutletTest extends TestCase
     /** @test */
     public function validate_outlet_name_is_not_more_than_60_characters()
     {
-        $this->loginAsUser();
+        // $this->loginAsUser();
 
         // name 70 characters
         $this->post(route('outlets.store'), $this->getCreateFields([
@@ -72,7 +72,7 @@ class ManageOutletTest extends TestCase
     /** @test */
     public function validate_outlet_address_is_not_more_than_255_characters()
     {
-        $this->loginAsUser();
+        // $this->loginAsUser();
 
         // address 256 characters
         $this->post(route('outlets.store'), $this->getCreateFields([
@@ -95,7 +95,7 @@ class ManageOutletTest extends TestCase
     /** @test */
     public function user_can_edit_a_outlet()
     {
-        $this->loginAsUser();
+        // $this->loginAsUser();
         $outlet = factory(Outlet::class)->create(['name' => 'Testing 123']);
 
         $this->visitRoute('outlets.show', $outlet);
@@ -114,7 +114,7 @@ class ManageOutletTest extends TestCase
     /** @test */
     public function validate_outlet_name_update_is_required()
     {
-        $this->loginAsUser();
+        // $this->loginAsUser();
         $outlet = factory(Outlet::class)->create(['name' => 'Testing 123']);
 
         // name empty
@@ -125,7 +125,7 @@ class ManageOutletTest extends TestCase
     /** @test */
     public function validate_outlet_name_update_is_not_more_than_60_characters()
     {
-        $this->loginAsUser();
+        // $this->loginAsUser();
         $outlet = factory(Outlet::class)->create(['name' => 'Testing 123']);
 
         // name 70 characters
@@ -138,7 +138,7 @@ class ManageOutletTest extends TestCase
     /** @test */
     public function validate_outlet_address_update_is_not_more_than_255_characters()
     {
-        $this->loginAsUser();
+        // $this->loginAsUser();
         $outlet = factory(Outlet::class)->create(['name' => 'Testing 123']);
 
         // address 256 characters
@@ -151,7 +151,7 @@ class ManageOutletTest extends TestCase
     /** @test */
     public function user_can_delete_a_outlet()
     {
-        $this->loginAsUser();
+        // $this->loginAsUser();
         $outlet = factory(Outlet::class)->create();
         factory(Outlet::class)->create();
 

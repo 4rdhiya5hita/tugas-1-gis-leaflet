@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- <p style="background-image: url('/img/background.png'); width:1200px; height:680px"> -->
-  <div style="background-image: url('/img/bg-peta.jpg'); background-size: cover; height:625px; padding-top:80px;">
+<div style="background-image: url('/img/bg-peta.jpg'); background-size: cover; height:625px; padding-top:80px;">
   
 <div class="container">
     <div class="card justify-content-center">
@@ -23,14 +23,34 @@
                     {!! $errors->first('address', '<span class="invalid-feedback" role="alert">:message</span>') !!}
                 </div>
                 <div class="form-group">
-                    <label for="type" class="control-label">{{ __('outlet.type') }}</label>
-                    <select id="type" type="text" class="form-control{{ $errors->has('type') ? ' is-invalid' : '' }}" name="type" value="{{ old('type') }}" required>
-                        <option>house</option>
-                        <option>store</option>
-                        <option>school</option>
+                    <label for="type" class="control-label">{{ __('outlet.type') }}</label>                    
+                    <select id="type" type="text" class="form-control{{ $errors->has('type') ? ' is-invalid' : '' }}" name="type" value="{{ old('type', request('type')) }}" required>
+                        <option value="house">house</option>
+                        <option value="store">store</option>
+                        <option value="school">school</option>
                     </select>
                     {!! $errors->first('type', '<span class="invalid-feedback" role="alert">:message</span>') !!}
                 </div>
+
+                <div id="divElement" style="display:none;">Data Tambahan Sekolah
+                    <div class="form-group">
+                        <label for="akreditas" class="control-label">{{ __('outlet.akreditas') }}</label>
+                        <input id="akreditas" type="text" class="form-control{{ $errors->has('akreditas') ? ' is-invalid' : '' }}" name="akreditas" value="{{ old('akreditas') }}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="jumlah_siswa" class="control-label">{{ __('outlet.jumlah_siswa') }}</label>
+                        <input id="jumlah_siswa" type="text" class="form-control{{ $errors->has('jumlah_siswa') ? ' is-invalid' : '' }}" name="jumlah_siswa" value="{{ old('jumlah_siswa') }}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="jenjang" class="control-label">{{ __('outlet.jenjang') }}</label>
+                        <select id="jenjang" type="text" class="form-control{{ $errors->has('jenjang') ? ' is-invalid' : '' }}" name="jenjang" value="{{ old('jenjang', request('jenjang')) }}" >
+                            <option value="SD">SD</option>
+                            <option value="SMP">SMP</option>
+                            <option value="SMA">SMA</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -50,8 +70,9 @@
                 <!-- <div id="mapid"></div> -->
             </div>
             <div class="card-footer">
-                <button type="submit" value="{{ __('outlet.create') }}" class="btn btn-primary">Simpan Data</button>
-                <!-- <a href="{{ route('outlets.index') }}" class="btn btn-link">{{ __('app.cancel') }}</a> -->
+                <button type="submit" value="{{ __('outlet.create') }}" class="btn btn-success">Simpan Data</button>
+                <a href="{{ route('outlet_map.index') }}" class="btn btn-outline-primary">{{ __('app.back_to_map') }}</a>
+                <!-- <a href="{{ route('outlets.index') }}" class="btn btn-link">{{ __('app.back_to_map') }}</a> -->
             </div>
         </form>
     </div>
@@ -66,6 +87,13 @@
 
 <style>
     #mapid { height: 300px; }
+
+		.hidden {
+			display: none;
+		}
+        #myCollapsible {
+			transition: height 0.5s, opacity 0.5s;
+		}
 </style>
 @endsection
 
@@ -74,6 +102,29 @@
     integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
     crossorigin=""></script>
 <script>
+    $(document).ready(function() {
+        // Set initial visibility of the div element based on the selected value
+        var selectedValue = $('#type').val();
+        if (selectedValue === 'school') {
+            $('#divElement').show();
+        } else {
+            $('#divElement').hide();
+        }
+
+        // Add event listener for dropdown menu change
+        $('#type').on('change', function() {
+            // Get the selected value
+            var selectedValue = $(this).val();
+
+            // Toggle visibility of the div element based on the selected value
+            if (selectedValue === 'school') {
+                $('#divElement').show();
+            } else {
+                $('#divElement').hide();
+            }
+        });
+    });
+
     var mapCenter = [{{ request('latitude', config('leaflet.map_center_latitude')) }}, {{ request('longitude', config('leaflet.map_center_longitude')) }}];
     var map = L.map('mapid').setView(mapCenter, {{ config('leaflet.zoom_level') }});
 

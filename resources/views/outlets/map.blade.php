@@ -11,6 +11,11 @@
     integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
     crossorigin=""/>
 
+<link rel="stylesheet" href="../js/Leaflet.markercluster-master/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="../js/Leaflet.markercluster-master/dist/MarkerCluster.Default.css" />
+<script src="../js/Leaflet.markercluster-master/dist/leaflet.markercluster-src.js"></script>
+<script src="{{ secure_asset('js/app.js') }}"></script>
+
 <style>
     #mapid { height: 630px; width: 1335px; }
 </style>
@@ -21,7 +26,9 @@
     integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
     crossorigin=""></script>
 
-<script>
+<script>    
+    
+
     var map = L.map('mapid').setView([-8.703537179417122, 115.21847565025823], 15);
     var baseUrl = "{{ url('/') }}";
 
@@ -41,6 +48,11 @@
 
     var myStore = L.icon({
         iconUrl: 'img/marker-store.png',
+        iconSize: [45, 45],
+    });
+
+    var myPoint = L.icon({
+        iconUrl: 'img/marker-black.png',
         iconSize: [45, 45],
     });
 
@@ -106,38 +118,67 @@
     });
 
     // ada yg hilang disini (authorization)
-    var theMarker;
 
-    map.on('click', function(e) {
-        let latitude = e.latlng.lat.toString().substring(0, 15);
-        let longitude = e.latlng.lng.toString().substring(0, 15);
+    var coordinates = [];
+    @foreach($data as $row)
+        var latlng = L.latLng({{ $row->latitude }}, {{ $row->longitude }});
+        coordinates.push(latlng);
+    @endforeach
 
-        if (theMarker != undefined) {
-            map.removeLayer(theMarker);
-        };
+    // var polyline = L.polyline(coordinates, { color: 'red' }).addTo(map);
+    // var cluster_markers = L.markerClusterGroup();
+    // var marker = L.marker([coordinate.lat, coordinate.lon]);
 
-        var popupContent = `
-        <div class="container">
-            <div class="row">
-                <div class="cell merged" style="text-align:center">Latitude</div>
-            </div>
-            <div class="row mb-3">
-                <input type="text" class="form-control" name="latitude" value="`+ latitude +`">
-            </div>
-            <div class="row">
-                <div class="cell merged" style="text-align:center">Longitude</div>
-            </div>
-            <div class="row">
-                <input type="text" class="form-control" name="longitude" value="`+ longitude + `">
-            </div>
-        </div>
-        `;
-        popupContent += '<br><a class="btn btn-primary" style="color:white;" href="{{ route('outlets.create') }}?latitude=' + latitude + '&longitude=' + longitude + '">Tambah Data Lokasi</a>';
+    // console.log(marker);
+    // cluster_markers.addLayer(marker);
+    // map.addLayer(cluster_markers);
+    var markers = L.markerClusterGroup();
+    for (var i = 0; i < coordinates.length; i++) {
+			var a = coordinates[i];
+			var marker = L.marker(new L.LatLng(a[0], a[1]));			
+			markers.addLayer(marker);
+		}
 
-        theMarker = L.marker([latitude, longitude]).addTo(map);
-        theMarker.bindPopup(popupContent)
-        .openPopup();
-    });
+	map.addLayer(markers);
+
+    // var theMarker;
+
+    // map.on('click', function(e) {
+    //     let latitude = e.latlng.lat.toString().substring(0, 15);
+    //     let longitude = e.latlng.lng.toString().substring(0, 15);
+
+    //     if (theMarker != undefined) {
+    //         map.removeLayer(theMarker);
+    //     };
+
+    //     var popupContent = `
+    //         <div class="container">
+    //             <div class="row">
+    //                 <div class="cell merged" style="text-align:center">Latitude</div>
+    //             </div>
+    //             <div class="row mb-3">
+    //                 <input type="text" class="form-control" name="latitude" value="${latitude}">
+    //             </div>
+    //             <div class="row">
+    //                 <div class="cell merged" style="text-align:center">Longitude</div>
+    //             </div>
+    //             <div class="row">
+    //                 <input type="text" class="form-control" name="longitude" value="${longitude}">
+    //             </div>
+    //         </div>
+    //     `;
+
+    //     popupContent += '<br><a class="btn btn-primary" style="color:white;" href="{{ route('outlets.create') }}?latitude=' + latitude + '&longitude=' + longitude + '">Tambah Data Lokasi</a>';
+
+
+    //     // console.log(type);
+        
+    //     theMarker = L.marker([latitude, longitude],{icon: myPoint, draggable:true}).addTo(map);
+    //     theMarker.bindPopup(popupContent)
+    //     .openPopup();
+
+    // });
     // ada yg hilang disini (authorization)
+
 </script>
 @endpush

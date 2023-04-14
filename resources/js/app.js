@@ -34,3 +34,8 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
 const app = new Vue({
     el: '#app'
 });
+
+import L from 'leaflet';
+import 'leaflet.markercluster';
+
+// Your other JavaScript code here
