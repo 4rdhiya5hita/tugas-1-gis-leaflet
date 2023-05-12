@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.app')
 
 @section('title', __('outlet.create'))
 
@@ -32,7 +32,7 @@
                     {!! $errors->first('type', '<span class="invalid-feedback" role="alert">:message</span>') !!}
                 </div>
 
-                <div id="divElement" style="display:none;">Data Tambahan Sekolah
+                <!-- <div id="divElement" style="display:none;">Data Tambahan Sekolah -->
                     <div class="form-group">
                         <label for="akreditas" class="control-label">{{ __('outlet.akreditas') }}</label>
                         <input id="akreditas" type="text" class="form-control{{ $errors->has('akreditas') ? ' is-invalid' : '' }}" name="akreditas" value="{{ old('akreditas') }}" >
@@ -49,7 +49,7 @@
                             <option value="SMA">SMA</option>
                         </select>
                     </div>
-                </div>
+                <!-- </div> -->
 
                 <div class="row">
                     <div class="col-md-6">
@@ -102,28 +102,28 @@
     integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
     crossorigin=""></script>
 <script>
-    $(document).ready(function() {
-        // Set initial visibility of the div element based on the selected value
-        var selectedValue = $('#type').val();
-        if (selectedValue === 'school') {
-            $('#divElement').show();
-        } else {
-            $('#divElement').hide();
-        }
+    // $(document).ready(function() {
+    //     // Set initial visibility of the div element based on the selected value
+    //     var selectedValue = $('#type').val();
+    //     if (selectedValue === 'school') {
+    //         $('#divElement').show();
+    //     } else {
+    //         $('#divElement').hide();
+    //     }
 
-        // Add event listener for dropdown menu change
-        $('#type').on('change', function() {
-            // Get the selected value
-            var selectedValue = $(this).val();
+    //     // Add event listener for dropdown menu change
+    //     $('#type').on('change', function() {
+    //         // Get the selected value
+    //         var selectedValue = $(this).val();
 
-            // Toggle visibility of the div element based on the selected value
-            if (selectedValue === 'school') {
-                $('#divElement').show();
-            } else {
-                $('#divElement').hide();
-            }
-        });
-    });
+    //         // Toggle visibility of the div element based on the selected value
+    //         if (selectedValue === 'school') {
+    //             $('#divElement').show();
+    //         } else {
+    //             $('#divElement').hide();
+    //         }
+    //     });
+    // });
 
     var mapCenter = [{{ request('latitude', config('leaflet.map_center_latitude')) }}, {{ request('longitude', config('leaflet.map_center_longitude')) }}];
     var map = L.map('mapid').setView(mapCenter, {{ config('leaflet.zoom_level') }});

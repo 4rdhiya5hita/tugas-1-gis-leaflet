@@ -11,21 +11,19 @@
 |
 */
 
-// Route::get('/', 'OutletMapController@index');
+Route::get('/', 'OutletMapController@index');
 
-// Auth::routes();
+Auth::routes();
 
-// Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home');
 
-/*
- * Outlets Routes
- */
-// Route::get('/our_outlets', 'OutletMapController@index')->name('outlet_map.index');
-// Route::resource('outlets', 'OutletController');
-
-
-//dipakai
-Route::get('/', 'OutletMapController@index')->name('outlet_map.index');
-
-// Route::get('/our_outlets', 'OutletMapController@index');
+// Outlets Routes
+Route::get('/our_outlets', 'OutletMapController@index')->name('outlet_map.index');
 Route::resource('outlets', 'OutletController');
+
+
+// //dipakai
+// Route::get('/', 'OutletMapController@index')->name('outlet_map.index');
+
+// // Route::get('/our_outlets', 'OutletMapController@index');
+// Route::resource('outlets', 'OutletController');

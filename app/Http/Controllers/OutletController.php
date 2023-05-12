@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jenjang;
 use App\Outlet;
 use App\School;
 use Illuminate\Http\Request;
@@ -18,9 +19,11 @@ class OutletController extends Controller
     {
         // $this->authorize('manage_outlet');
 
+        // $outlets = Outlet::all();
         $outletQuery = Outlet::query();
         $outletQuery->where('name', 'like', '%'.request('q').'%');
         $outlets = $outletQuery->paginate(25);
+        // dd($outlets);
 
         return view('outlets.index', compact('outlets'));
     }
@@ -98,9 +101,11 @@ class OutletController extends Controller
     public function show(Outlet $outlet)
     {
         // $school = $outlet->creator;
-        $schools = School::find($outlet->school_id);
-        // dd($schools);
-        return view('outlets.show', compact('outlet', 'schools'));
+        // $schools = Outlet::find($outlet->id);
+        $jenjang = Jenjang::find($outlet->jenjang_id);
+        $image = Outlet::where('image', '=', $outlet->image)->first();
+        // dd($image);
+        return view('outlets.show', compact('outlet', 'jenjang', 'image'));
     }
 
     /**

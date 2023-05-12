@@ -1,9 +1,9 @@
-@extends('layouts.master')
+@extends('layouts.app')
 
 @section('content')
-<div class="card">
+<!-- <div class="card"> -->
     <div class="card-body" id="mapid"></div>
-</div>
+<!-- </div> -->
 @endsection
 
 @section('styles')
@@ -11,13 +11,13 @@
     integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
     crossorigin=""/>
 
-<link rel="stylesheet" href="../js/Leaflet.markercluster-master/dist/MarkerCluster.css" />
+<!-- <link rel="stylesheet" href="../js/Leaflet.markercluster-master/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="../js/Leaflet.markercluster-master/dist/MarkerCluster.Default.css" />
-<script src="../js/Leaflet.markercluster-master/dist/leaflet.markercluster-src.js"></script>
-<script src="{{ secure_asset('js/app.js') }}"></script>
+<script src="../js/Leaflet.markercluster-master/dist/leaflet.markercluster-src.js"></script> -->
+<script src="{{ asset('js/app.js') }}"></script>
 
 <style>
-    #mapid { height: 630px; width: 1335px; }
+    #mapid { margin-left: 20px; margin-top: 20px; height: 550px; width: 1325px; border: 5px solid white; border-radius: 10px; }
 </style>
 @endsection
 @push('scripts')
@@ -36,20 +36,11 @@
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    var myHouse = L.icon({
-        iconUrl: 'img/marker-house.png',
-        iconSize: [45, 45],
-    });
-
+    // marker png
     var mySchool = L.icon({
         iconUrl: 'img/marker-school.png',
         iconSize: [45, 45],
     }); 
-
-    var myStore = L.icon({
-        iconUrl: 'img/marker-store.png',
-        iconSize: [45, 45],
-    });
 
     var myPoint = L.icon({
         iconUrl: 'img/marker-black.png',
@@ -58,66 +49,26 @@
 
     axios.get('{{ route('api.outlets.index') }}')
     .then(function (response) {
-        // console.log(response.data);
-        var point_type = response.data;
-        // console.log(point_type);
-
-        point_type.getFeaturesByProperty = function(key, value) {
-            return this.features.filter(function(feature){
-                if (feature.properties[key] === value){
-                    return true;
-                } else {
-                    return false;
-                }
-            
-            })
-        }
-
-        // RUMAH 
-        L.geoJSON(point_type.getFeaturesByProperty('type', 'house'), {
-            pointToLayer: function(geoJsonPoint, latlng) {
-                return L.marker(latlng,{
-                    icon: myHouse,
-                    draggable: false
-                }).addTo(map);            
-            }
-        })
-        .bindPopup(function (layer) {
-            return layer.feature.properties.map_popup_content;
-        }).addTo(map);
-
-        // TOKO
-        L.geoJSON(point_type.getFeaturesByProperty('type', 'store'), {
-            pointToLayer: function(geoJsonPoint, latlng) {
-                return L.marker(latlng,{
-                    icon: myStore,
-                    draggable: false
-                }).addTo(map);            
-            }
-        })
-        .bindPopup(function (layer) {
-            return layer.feature.properties.map_popup_content;
-        }).addTo(map);
-
-        // SEKOLAH
-        L.geoJSON(point_type.getFeaturesByProperty('type', 'school'), {
+        console.log(response.data);
+        L.geoJSON(response.data, {
             pointToLayer: function(geoJsonPoint, latlng) {
                 return L.marker(latlng,{
                     icon: mySchool,
                     draggable: false
-                }).addTo(map);            
+                }).addTo(map);     
             }
         })
         .bindPopup(function (layer) {
             return layer.feature.properties.map_popup_content;
         }).addTo(map);
-
     })
     .catch(function (error) {
         console.log(error);
     });
 
+   
     // ada yg hilang disini (authorization)
+    @can('create', new App\Outlet)
 
     var coordinates = [];
     @foreach($data as $row)
@@ -125,60 +76,47 @@
         coordinates.push(latlng);
     @endforeach
 
-    // var polyline = L.polyline(coordinates, { color: 'red' }).addTo(map);
-    // var cluster_markers = L.markerClusterGroup();
-    // var marker = L.marker([coordinate.lat, coordinate.lon]);
+    
+    var theMarker;
 
-    // console.log(marker);
-    // cluster_markers.addLayer(marker);
-    // map.addLayer(cluster_markers);
-    var markers = L.markerClusterGroup();
-    for (var i = 0; i < coordinates.length; i++) {
-			var a = coordinates[i];
-			var marker = L.marker(new L.LatLng(a[0], a[1]));			
-			markers.addLayer(marker);
-		}
+    map.on('click', function(e) {
+        let latitude = e.latlng.lat.toString().substring(0, 15);
+        let longitude = e.latlng.lng.toString().substring(0, 15);
 
-	map.addLayer(markers);
+        if (theMarker != undefined) {
+            map.removeLayer(theMarker);
+        };
 
-    // var theMarker;
+        var popupContent = `
+            <div class="container">
+                <div class="row">
+                    <div class="cell merged" style="text-align:center">Latitude</div>
+                </div>
+                <div class="row mb-3">
+                    <input type="text" class="form-control" name="latitude" value="${latitude}">
+                </div>
+                <div class="row">
+                    <div class="cell merged" style="text-align:center">Longitude</div>
+                </div>
+                <div class="row">
+                    <input type="text" class="form-control" name="longitude" value="${longitude}">
+                </div>
+            </div>
+        `;
 
-    // map.on('click', function(e) {
-    //     let latitude = e.latlng.lat.toString().substring(0, 15);
-    //     let longitude = e.latlng.lng.toString().substring(0, 15);
-
-    //     if (theMarker != undefined) {
-    //         map.removeLayer(theMarker);
-    //     };
-
-    //     var popupContent = `
-    //         <div class="container">
-    //             <div class="row">
-    //                 <div class="cell merged" style="text-align:center">Latitude</div>
-    //             </div>
-    //             <div class="row mb-3">
-    //                 <input type="text" class="form-control" name="latitude" value="${latitude}">
-    //             </div>
-    //             <div class="row">
-    //                 <div class="cell merged" style="text-align:center">Longitude</div>
-    //             </div>
-    //             <div class="row">
-    //                 <input type="text" class="form-control" name="longitude" value="${longitude}">
-    //             </div>
-    //         </div>
-    //     `;
-
-    //     popupContent += '<br><a class="btn btn-primary" style="color:white;" href="{{ route('outlets.create') }}?latitude=' + latitude + '&longitude=' + longitude + '">Tambah Data Lokasi</a>';
+        popupContent += '<br><a class="btn btn-primary" style="color:white;" href="{{ route('outlets.create') }}?latitude=' + latitude + '&longitude=' + longitude + '">Tambah Data Lokasi</a>';
 
 
-    //     // console.log(type);
+        // console.log(type);
         
-    //     theMarker = L.marker([latitude, longitude],{icon: myPoint, draggable:true}).addTo(map);
-    //     theMarker.bindPopup(popupContent)
-    //     .openPopup();
+        theMarker = L.marker([latitude, longitude],{icon: myPoint, draggable:true}).addTo(map);
+        theMarker.bindPopup(popupContent)
+        .openPopup();
 
-    // });
+        
+    });
     // ada yg hilang disini (authorization)
+    @endcan
 
 </script>
 @endpush

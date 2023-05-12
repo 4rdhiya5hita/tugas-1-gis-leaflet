@@ -4,6 +4,7 @@ namespace App;
 
 use App\User;
 use App\School;
+use App\Jenjang;
 use Illuminate\Database\Eloquent\Model;
 
 class Outlet extends Model
@@ -14,7 +15,7 @@ class Outlet extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'school_id', 'address', 'type', 'latitude', 'longitude', 'creator_id',
+        'name', 'alamat', 'image', 'akreditas', 'latitude', 'longitude', 'creator_id', 'jenjang_id',
     ];
 
     /**
@@ -51,7 +52,7 @@ class Outlet extends Model
      */
     public function creator()
     {
-        return $this->belongsTo(School::class, 'school_id', 'id');
+        return $this->belongsTo(Jenjang::class, 'jenjang_id', 'id');
     }
 
     public function school()
@@ -87,21 +88,18 @@ class Outlet extends Model
         $mapPopupContent = '';
 
         $mapPopupContent .= '<div class="my-2"><strong>'.__('outlet.name').':</strong><br>'.$this->name.'</div>';
-        $mapPopupContent .= '<div class="my-2"><strong>'.__('outlet.type').':</strong><br>'.$this->type.'</div>';
-        $mapPopupContent .= '<div class="my-2"><strong>'.__('outlet.address').':</strong><br>'.$this->address.'</div>';
+        $mapPopupContent .= '<div class="my-2"><strong>'.__('outlet.akreditas').':</strong><br>'. $this->akreditas .'</div>';
+        $mapPopupContent .= '<div class="my-2"><strong>'.__('outlet.address').':</strong><br>'.$this->alamat.'</div>';
 
-        if ($this->type == 'school'){
-            $akreditas = $this->creator->akreditas;
-            $jumlah_siswa = $this->creator->jumlah_siswa;
-            $jenjang = $this->creator->jenjang;
-            // Access the attributes of the current model
-            // $school = School::find($this->school_id); // Replace 'School' with your actual model name
-            // $mapPopupContent .= '<div class="my-2"><strong>'.__('outlet.akreditas').':</strong><br>'. $school->jenjang .'</div>';
-            $mapPopupContent .= '<div class="my-2"><strong>'.__('outlet.akreditas').':</strong><br>'. $akreditas .'</div>';
-            $mapPopupContent .= '<div class="my-2"><strong>'.__('outlet.jumlah_siswa').':</strong><br>'. $jumlah_siswa .'</div>';
-            $mapPopupContent .= '<div class="my-2"><strong>'.__('outlet.jenjang').':</strong><br>'. $jenjang .'</div>';
-            // Access the attributes of the related School model
-        }
+        // $akreditas = $this->creator->akreditas;
+        // $jumlah_siswa = $this->creator->jumlah_siswa;
+        $jenjang = $this->creator->jenjang;
+        // Access the attributes of the current model
+        // $school = School::find($this->school_id); // Replace 'School' with your actual model name
+        // $mapPopupContent .= '<div class="my-2"><strong>'.__('outlet.akreditas').':</strong><br>'. $school->jenjang .'</div>';
+        // $mapPopupContent .= '<div class="my-2"><strong>'.__('outlet.jumlah_siswa').':</strong><br>'. $jumlah_siswa .'</div>';
+        $mapPopupContent .= '<div class="my-2"><strong>'.__('outlet.jenjang').':</strong><br>'. $jenjang .'</div>';
+        // Access the attributes of the related School model
 
         $mapPopupContent .= '<div class="my-2"><strong>'.__('outlet.coordinate').':</strong><br>'.$this->coordinate.'</div>';
         $mapPopupContent .= '<div class="btn btn-outline-primary" style="display: flex; justify-content: center;">'.$this->name_link.'</div>';
